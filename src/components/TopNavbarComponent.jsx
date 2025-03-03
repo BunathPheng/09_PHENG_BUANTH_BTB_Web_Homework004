@@ -13,7 +13,7 @@ export default function TopNavbarComponent() {
       <form className="relative w-9/12 " onSubmit={handleSubmit}>
         {/* search button */}
         <button className="cursor-pointer">
-          <Search className="w-6 h-6 text-primary-text absolute top-3 left-4" />
+          <Search className="w-6 h-6 te xt-primary-text absolute top-3 left-4" />
         </button>
 
         {/* search input */}
@@ -32,7 +32,7 @@ export default function TopNavbarComponent() {
       </div>
 
       {/* profile image */}
-      <div className="h-16 rounded-xl w-2/12 bg-white py-2.5 px-3 flex gap-3 items-start">
+      <div className="h-16  rounded-xl w-2.5/12 bg-white py-2 px-3 my-3 flex gap-2 items-start">
         <img
           src="https://i.pinimg.com/736x/39/2a/50/392a5042102c7d7e4ed87527a2d7e74a.jpg"
           alt="profile image"
