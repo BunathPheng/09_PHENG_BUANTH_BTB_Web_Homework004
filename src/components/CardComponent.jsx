@@ -1,52 +1,101 @@
 import { EllipsisVertical } from "lucide-react";
 import React from "react";
 
-export default function CardComponent() {
+export default function CardComponent({ date, title, description, progress }) {
+  // Function to calculate days left and convert to weeks when appropriate
+  const calculateTimeLeft = (targetDateString) => {
+    // Parse the target date
+    const targetDate = new Date(targetDateString);
+    
+    // Get today's date
+    const today = new Date();
+    
+    // Reset time components to compare only dates
+    today.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
+    
+    // Calculate the difference in milliseconds
+    const timeDifference = targetDate.getTime() - today.getTime();
+    
+    // Convert milliseconds to days
+    const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    
+    // Convert to weeks if 7 or more days
+    if (daysLeft >= 7) {
+      const weeks = Math.floor(daysLeft / 7);
+      const remainingDays = daysLeft % 7;
+      
+      if (remainingDays === 0) {
+        return {
+          value: weeks,
+          unit: weeks === 1 ? "week" : "weeks"
+        };
+      } else {
+        return {
+          value: `${weeks}w ${remainingDays}d`,
+          unit: "" // Empty unit since it's included in the value
+        };
+      }
+    }
+    
+    return {
+      value: daysLeft,
+      unit: daysLeft === 1 ? "day" : "days"
+    };
+  };
+  
+  const getProgressColorClass = () => {
+    switch (progress) {
+      case "100": return "text-custom-sky-blue";
+      case "75": return "text-custom-carrot";
+      case "50": return "text-custom-yellow-500";
+      case "25": return "text-custom-pink";
+      default: return "text-gray-500";
+    }
+  };
+  
+  // Calculate time left
+  const timeLeft = calculateTimeLeft(date);
   return (
     <div>
-      <div className="max-w-sm p-6 bg-white rounded-2xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+      <div className="max-w-sm h-72 p-6 bg-white rounded-2xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
         <div className="flex justify-between mb-5">
-          {/* date */}
-          <p className={`text-custom-sky-blue font-medium`}>Jan 17, 2025</p>
+          <p className={getProgressColorClass() + " font-medium"}>{date}</p>
           <EllipsisVertical size={20} color="#374957" />
         </div>
-
+        
         <h5 className="capitalize mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          web design
+          {title}
         </h5>
-        <p className="line-clamp-2 mb-3 font-normal text-justify text-gray-400 dark:text-gray-400">
-          You should make web design pack with 30 different pose and with other
-          component on the internet as well.
+        
+        <p className="line-clamp-2 mb-3 h-14 font-normal text-justify text-gray-400 dark:text-gray-400">
+          {description || 
+            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias maxime debitis voluptas necessitatibus non nulla quis pariatur, hic expedita quaerat harum optio quae, fugiat esse exercitationem repudiandae totam mollitia natus."
+          }
         </p>
-
-        {/* progress bar */}
+        
+        {/* Progress bar */}
         <div className="w-full flex justify-between font-medium mb-1">
           <p>Progress</p>
-          <p>100%</p>
+          <p>{progress}%</p>
         </div>
-        <div className="relative mb-5 w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-          <div className="bg-custom-sky-blue h-2.5 rounded-full"></div>
-
-          <div
-            className="border-l-4 rounded-full border-l-custom-pink h-5 absolute -top-1 left-1/4"
-            title="25%"
-          ></div>
-
-          <div
-            className="border-l-4 rounded-full border-l-custom-yellow-500 h-5 absolute -top-1 left-2/4"
-            title="50%"
-          ></div>
-
-          <div
-            className="border-l-4 rounded-full border-l-custom-carrot h-5 absolute -top-1 left-3/4"
-            title="75%"
+        
+        <div className="mb-5 w-full bg-gray-200 rounded-full h-2.5">
+          <div 
+            className={`h-2.5 rounded-full ${
+              progress === "100" ? "bg-custom-sky-blue" : 
+              progress === "75" ? "bg-custom-carrot" : 
+              progress === "50" ? "bg-custom-yellow-500" : 
+              "bg-custom-pink"
+            }`}
+            style={{ width: `${progress}%` }}
           ></div>
         </div>
-
-        {/* deadline */}
+        
+        {/* Deadline */}
         <div className="flex justify-end">
-          <p className="font-medium bg-light-gray py-1.5 px-4 rounded-lg max-w-28 text-center">
-            1 day left
+          <p className="font-medium bg-light-gray py-1.5 px-4 rounded-lg max-w-fit text-center">
+            {timeLeft.value} {timeLeft.unit} left
           </p>
         </div>
       </div>

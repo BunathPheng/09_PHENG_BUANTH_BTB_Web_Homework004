@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function FilterComponent() {
-  // prevent the page from reload
+export default function FilterComponent({ values }) {
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    setSelectedOption(newValue);
+    values(newValue);
+  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
   return (
     <form className="mt-4 mx-4 flex justify-between" onSubmit={handleSubmit}>
-      <div className="relative w-full ">
+      <div className="relative w-full">
         <select
           id="filterLearningMaterials"
           name="filterLearningMaterials"
           className="text-sm focus:ring-custom-sky-blue focus:border-custom-sky-blue block w-full p-4 focus:outline-none text-gray-400 border-none rounded-xl bg-light-gray"
+          value={selectedOption}
+          onChange={handleChange}
         >
           <option hidden value="">
             Sort By
